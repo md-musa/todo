@@ -1,16 +1,18 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthProvider';
 import CompletedTodo from './CompletedTodo';
 
 function CompletedTasks() {
   const [todos, setTodos] = useState([]);
   const [changeTracker, setChangeTracker] = useState([]);
-  const user = { email: 'mohammad.musa706@gmail.com' };
+  const [user, setUser] = useContext(AuthContext);
 
   useEffect(() => {
     axios
-      .get(`/completedTasks/${user.email}`)
+      .get(`/completedTasks/${user?.email}`)
       .then(res => setTodos(res.data))
       .catch(error => console.log(error));
   }, [changeTracker]);

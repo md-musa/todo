@@ -5,16 +5,16 @@ import { useContext } from 'react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Todo from '../components/Todo';
-import AuthProvider from '../context/AuthProvider';
+import AuthProvider, { AuthContext } from '../context/AuthProvider';
 
 const Home = () => {
-  const user = useContext(AuthProvider);
+  const [user, setUser] = useContext(AuthContext);
   const [todos, setTodos] = useState([]);
   const [changeTracker, setChangeTracker] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`/${user.email}`)
+      .get(`/${user?.email}`)
       .then(res => setTodos(res.data))
       .catch(error => console.log(error));
   }, [changeTracker]);
@@ -22,7 +22,7 @@ const Home = () => {
   const addTodo = async e => {
     if (e.keyCode == 13) {
       try {
-        const { data } = await axios.post(`/${user.email}`, { task: e.target.value });
+        const { data } = await axios.post(`/${user?.email}`, { task: e.target.value });
         setChangeTracker(data);
         e.target.value = '';
       } catch (err) {
@@ -47,7 +47,7 @@ const Home = () => {
     setActiveButton({ myTask: false, completedTask: true });
 
     try {
-      const { data } = await axios.get(`/completedTasks/${user.email}`);
+      const { data } = await axios.get(`/completedTasks/${user?.email}`);
       setTodos(data);
     } catch (err) {
       console.log(err);
@@ -62,7 +62,7 @@ const Home = () => {
   const getMyTasks = async () => {
     setActiveButton({ myTask: true, completedTask: false });
     try {
-      const { data } = await axios.get(`/${user.email}`);
+      const { data } = await axios.get(`/${user?.email}`);
       setTodos(data);
     } catch (err) {
       console.log(err);
